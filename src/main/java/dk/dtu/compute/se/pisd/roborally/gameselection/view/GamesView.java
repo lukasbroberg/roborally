@@ -68,6 +68,11 @@ public class GamesView extends GridPane {
                         ", max: " + game.getMaxPlayers() + ")" );
 
                 Button startButton = new Button("Start");
+                startButton.setOnAction((e) -> {
+                    //JoinGameView j = new JoinGameView(game);
+
+                    //this.stage.setScene()
+                });
 
                 Button deleteButton = new Button("Delete");
                 deleteButton.setOnAction((e) -> {
@@ -109,7 +114,12 @@ public class GamesView extends GridPane {
             this.startButton = startButton;
             this.deleteButton = deleteButton;
         }
-
     }
+    /*
+
+    private class SignupView(AppController appcontroller, GameSelection gameSelection){
+       // public final Game game;
+
+    }*/
 
 }

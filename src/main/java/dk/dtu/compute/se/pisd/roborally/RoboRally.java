@@ -23,6 +23,7 @@ package dk.dtu.compute.se.pisd.roborally;
 
 import dk.dtu.compute.se.pisd.roborally.controller.AppController;
 import dk.dtu.compute.se.pisd.roborally.controller.GameController;
+import dk.dtu.compute.se.pisd.roborally.gameselection.model.Game;
 import dk.dtu.compute.se.pisd.roborally.gameselection.view.GameSelection;
 import dk.dtu.compute.se.pisd.roborally.view.BoardView;
 import dk.dtu.compute.se.pisd.roborally.view.RoboRallyMenuBar;
@@ -115,6 +116,12 @@ public class RoboRally extends Application {
         }
 
     }
+
+    /*public void createNewGame(AppController appController, Game game){
+            //Scene createNewGameScene = new Scene();
+            //stage.setScene(createNewGameScene);
+
+    }*/
 
     @Override
     public void stop() throws Exception {
