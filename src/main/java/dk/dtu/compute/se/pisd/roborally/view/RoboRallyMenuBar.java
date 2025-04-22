@@ -70,7 +70,7 @@ public class RoboRallyMenuBar extends MenuBar {
         signInGame.setOnAction(e-> this.appController.signInGame());
         controlMenu.getItems().add(signInGame);
         //Sign out game
-        signInGame = new MenuItem("Sign Out");
+        signOutGame = new MenuItem("Sign Out");
         signInGame.setOnAction(e-> this.appController.signOutGame());
         controlMenu.getItems().add(signOutGame);
 
