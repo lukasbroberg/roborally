@@ -138,6 +138,9 @@ public class AppController implements Observer {
         }
 
     }
+    public void createGame(String gameID,String gameName, String minPlayers, String maxPlayers ){
+        System.out.println("Create game:"+gameName+"ID:"+gameID+",minPlayers:"+minPlayers+"maxPlayers:"+maxPlayers+")");
+    }
 
     public void gameSelected(Game game) {
         if (gameController == null) {
