@@ -40,7 +40,12 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import org.jetbrains.annotations.NotNull;
+import uk.co.blackpepper.bowman.Client;
+import uk.co.blackpepper.bowman.ClientFactory;
+import uk.co.blackpepper.bowman.Configuration;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -138,8 +143,28 @@ public class AppController implements Observer {
         }
 
     }
-    public void createGame(String gameID,String gameName, String minPlayers, String maxPlayers ){
-        System.out.println("Create game:"+gameName+"ID:"+gameID+",minPlayers:"+minPlayers+"maxPlayers:"+maxPlayers+")");
+
+    public void signInGame(){
+
+    }
+    public void signOutGame(){
+
+    }
+    public void createGame(String gameID,String gameName, int minPlayers, int maxPlayers ) throws URISyntaxException {
+//        System.out.println("Create game:"+gameName+"ID:"+gameID+",minPlayers:"+minPlayers+"maxPlayers:"+maxPlayers+")");
+        URI baseURI = new URI("http://localhost:8080/");
+
+        ClientFactory factory = Configuration.builder()
+                .setBaseUri(baseURI)
+                .build()
+                .buildClientFactory();
+
+        Client<Game> clientGame = factory.create(Game.class);
+        Game game = new Game();
+        game.setMaxPlayers(maxPlayers);
+        game.setMinPlayers(minPlayers);
+        game.setName(gameName);
+        clientGame.post(game);
     }
 
     public void gameSelected(Game game) {

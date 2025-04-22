@@ -8,6 +8,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
+import java.net.URISyntaxException;
+
 public class GameSelection extends BorderPane {
 
     AppController appController;
@@ -50,12 +52,16 @@ public class GameSelection extends BorderPane {
         createNewGame.setOnAction((e) ->
                 createNewGameDialog.showAndWait().ifPresent(response ->{
                     if(response ==ButtonType.OK){
-                        String maxPlayers = maxPlayersField.getText();
-                        String minPlayers = minPlayersField.getText();
+                        int maxPlayers =Integer.parseInt(maxPlayersField.getText());
+                        int minPlayers = Integer.parseInt(minPlayersField.getText());
                         String gameID = gameIdField.getText();
                         String gameName = nameField.getText();
 
-                        appController.createGame(gameID,gameName,minPlayers,maxPlayers);
+                        try {
+                            appController.createGame(gameID,gameName,minPlayers,maxPlayers);
+                        } catch (URISyntaxException ex) {
+                            throw new RuntimeException(ex);
+                        }
                     }
                 }));
 

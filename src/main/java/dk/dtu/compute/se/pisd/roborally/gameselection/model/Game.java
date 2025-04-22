@@ -1,5 +1,8 @@
 package dk.dtu.compute.se.pisd.roborally.gameselection.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.intellij.lang.annotations.Identifier;
 import uk.co.blackpepper.bowman.annotation.LinkedResource;
 import uk.co.blackpepper.bowman.annotation.RemoteResource;
 import uk.co.blackpepper.bowman.annotation.ResourceId;
@@ -9,9 +12,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RemoteResource("/game")
+//@JsonIdentityInfo(
+//        scope=Game.class,
+//        generator = ObjectIdGenerators.PropertyGenerator.class,
+//        property = "uid"
+//)
 public class Game {
 
-
+//    @Id
+//    @Column(name = "game_id")
+//    @GeneratedValue(strategy =GenerationType.AUTO)
     private URI id;
 
     private long uid;

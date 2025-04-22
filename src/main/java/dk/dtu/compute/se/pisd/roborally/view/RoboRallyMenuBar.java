@@ -41,7 +41,8 @@ public class RoboRallyMenuBar extends MenuBar {
     private MenuItem saveGame;
 
     private MenuItem newGame;
-
+    private MenuItem signInGame;
+    private MenuItem signOutGame;
     private MenuItem selectGame;
 
     private MenuItem loadGame;
@@ -63,6 +64,15 @@ public class RoboRallyMenuBar extends MenuBar {
         selectGame = new MenuItem("Select Online Game");
         selectGame.setOnAction( e -> this.appController.selectGame());
         controlMenu.getItems().add(selectGame);
+
+        //Sign in
+        signInGame = new MenuItem("Sign In");
+        signInGame.setOnAction(e-> this.appController.signInGame());
+        controlMenu.getItems().add(signInGame);
+        //Sign out game
+        signInGame = new MenuItem("Sign Out");
+        signInGame.setOnAction(e-> this.appController.signOutGame());
+        controlMenu.getItems().add(signOutGame);
 
         stopGame = new MenuItem("Stop Game");
         stopGame.setOnAction( e -> this.appController.stopGame());
