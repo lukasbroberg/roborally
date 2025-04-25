@@ -22,6 +22,7 @@
 package dk.dtu.compute.se.pisd.roborally.view;
 
 import dk.dtu.compute.se.pisd.roborally.controller.AppController;
+import dk.dtu.compute.se.pisd.roborally.gameselection.view.AppDialogs;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -66,12 +67,13 @@ public class RoboRallyMenuBar extends MenuBar {
         controlMenu.getItems().add(selectGame);
 
         //Sign in
-        signInGame = new MenuItem("Sign In");
-        signInGame.setOnAction(e-> this.appController.signInGame());
+        signInGame = new MenuItem("Sign in");
+        signInGame.setOnAction( e -> this.appController.signInGame());
         controlMenu.getItems().add(signInGame);
+
         //Sign out game
         signOutGame = new MenuItem("Sign Out");
-        signInGame.setOnAction(e-> this.appController.signOutGame());
+        signOutGame.setOnAction(e-> this.appController.signOutGame());
         controlMenu.getItems().add(signOutGame);
 
         stopGame = new MenuItem("Stop Game");

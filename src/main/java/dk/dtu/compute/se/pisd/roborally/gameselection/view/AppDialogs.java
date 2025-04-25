@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class AppDialogs {
@@ -18,6 +19,7 @@ public class AppDialogs {
     }
 
     public void signIn(){
+        System.out.println("Clicked");
         Stage window = new Stage();
 
         Text registerNewText = new Text("Register new user");
@@ -55,7 +57,7 @@ public class AppDialogs {
         window.setTitle("Register new user");
         window.setScene(scene);
         window.sizeToScene();
-
+        window.initModality(Modality.APPLICATION_MODAL);
         window.show();
     }
 

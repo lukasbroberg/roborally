@@ -26,6 +26,7 @@ import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 
 import dk.dtu.compute.se.pisd.roborally.RoboRally;
 
+import dk.dtu.compute.se.pisd.roborally.gameselection.controller.OnlineController;
 import dk.dtu.compute.se.pisd.roborally.gameselection.model.Game;
 
 import dk.dtu.compute.se.pisd.roborally.dal.GameInDB;
@@ -67,18 +68,9 @@ public class AppController implements Observer {
 
     private GameController gameController;
 
-    private AppDialogs appDialogs;
 
     public AppController(@NotNull RoboRally roboRally) {
         this.roboRally = roboRally;
-    }
-
-    public void setAppDialog(AppDialogs appDialogs){
-        this.appDialogs=appDialogs;
-    }
-
-    public AppDialogs getAppDialogs(){
-        return this.appDialogs;
     }
 
     public void newGame() {
@@ -156,12 +148,10 @@ public class AppController implements Observer {
     }
 
     public void signInGame(){
-        if(this.appDialogs==null){
-            return;
-        }
-        this.appDialogs.signIn();
-
+        AppDialogs signInDialog = new AppDialogs(new OnlineController(this));
+        signInDialog.signIn();
     }
+
     public void signOutGame(){
 
     }

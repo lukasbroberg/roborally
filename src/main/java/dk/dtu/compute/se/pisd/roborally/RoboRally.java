@@ -62,9 +62,9 @@ public class RoboRally extends Application {
 
         AppController appController = new AppController(this);
 
-        OnlineController onlineController = new OnlineController();
-        AppDialogs appDialogs = new AppDialogs(onlineController);
-        appController.setAppDialog(appDialogs);
+//        OnlineController onlineController = new OnlineController();
+//        AppDialogs appDialogs = new AppDialogs(onlineController);
+//        appController.setAppDialog(appDialogs);
 
         // create the primary scene with the a menu bar and a pane for
         // the board view (which initially is empty); it will be filled
