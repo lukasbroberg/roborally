@@ -32,12 +32,31 @@ public class Game {
 
     private int maxPlayers;
 
-    // ...
+    private GameState state;
 
     private List<Player> players = new ArrayList<>();
 
+    private User owner;
+
 
     public Game() {};
+
+    public void setState(GameState state){
+        this.state=state;
+    }
+
+    public GameState getState(){
+        return this.state;
+    }
+
+    public User getOwner(){
+        return this.owner;
+    }
+
+    public void setOwner(User owner){
+        this.owner = owner;
+    }
+
 
     public Game(String name, int minPlayers, int maxPlayers) {
         this.name = name;

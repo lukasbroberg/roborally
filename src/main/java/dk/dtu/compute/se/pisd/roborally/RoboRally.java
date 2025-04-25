@@ -23,7 +23,9 @@ package dk.dtu.compute.se.pisd.roborally;
 
 import dk.dtu.compute.se.pisd.roborally.controller.AppController;
 import dk.dtu.compute.se.pisd.roborally.controller.GameController;
+import dk.dtu.compute.se.pisd.roborally.gameselection.controller.OnlineController;
 import dk.dtu.compute.se.pisd.roborally.gameselection.model.Game;
+import dk.dtu.compute.se.pisd.roborally.gameselection.view.AppDialogs;
 import dk.dtu.compute.se.pisd.roborally.gameselection.view.GameSelection;
 import dk.dtu.compute.se.pisd.roborally.view.BoardView;
 import dk.dtu.compute.se.pisd.roborally.view.RoboRallyMenuBar;
@@ -59,6 +61,10 @@ public class RoboRally extends Application {
         stage = primaryStage;
 
         AppController appController = new AppController(this);
+
+        OnlineController onlineController = new OnlineController();
+        AppDialogs appDialogs = new AppDialogs(onlineController);
+        appController.setAppDialog(appDialogs);
 
         // create the primary scene with the a menu bar and a pane for
         // the board view (which initially is empty); it will be filled
