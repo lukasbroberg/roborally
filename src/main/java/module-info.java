@@ -15,6 +15,8 @@ module roborally {
     requires spring.hateoas;
     requires org.javassist;
     requires com.fasterxml.jackson.databind;
+    requires spring.web;
+    requires spring.core;
 
     exports dk.dtu.compute.se.pisd.roborally;
 
