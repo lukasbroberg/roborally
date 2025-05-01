@@ -17,6 +17,7 @@ module roborally {
     requires com.fasterxml.jackson.databind;
     requires spring.web;
     requires spring.core;
+    requires java.desktop;
 
     exports dk.dtu.compute.se.pisd.roborally;
 

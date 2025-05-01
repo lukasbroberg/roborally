@@ -68,9 +68,12 @@ public class AppController implements Observer {
 
     private GameController gameController;
 
+    private OnlineController onlineController;
+
 
     public AppController(@NotNull RoboRally roboRally) {
         this.roboRally = roboRally;
+        this.onlineController = new OnlineController(this);
     }
 
     public void newGame() {
@@ -148,12 +151,17 @@ public class AppController implements Observer {
     }
 
     public void signInGame(){
-        AppDialogs signInDialog = new AppDialogs(new OnlineController(this));
+        AppDialogs signInDialog = new AppDialogs(onlineController);
         signInDialog.signIn();
     }
 
     public void signOutGame(){
-
+        try {
+            onlineController.signOut();
+        }catch(IllegalStateException err){
+            AppDialogs exceptionDialog = new AppDialogs(onlineController);
+            exceptionDialog.dialogMessage("Unable to sign out", err.getMessage());
+        }
     }
     public void createGame(String gameID,String gameName, int minPlayers, int maxPlayers ) throws URISyntaxException {
 //        System.out.println("Create game:"+gameName+"ID:"+gameID+",minPlayers:"+minPlayers+"maxPlayers:"+maxPlayers+")");
