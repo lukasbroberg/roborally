@@ -4,6 +4,8 @@ import dk.dtu.compute.se.pisd.roborally.controller.AppController;
 import dk.dtu.compute.se.pisd.roborally.gameselection.model.OnlineState;
 import dk.dtu.compute.se.pisd.roborally.gameselection.model.User;
 import dk.dtu.compute.se.pisd.roborally.gameselection.view.AppDialogs;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import org.springframework.web.util.UriBuilder;
 
 import javax.swing.*;
 import java.util.List;
+import java.util.Optional;
 
 public class OnlineController {
 
@@ -42,12 +45,28 @@ public class OnlineController {
 
             //Create new user:
             if(users.isEmpty()){
-                //Create user object
-                User newUser = new User();
-                newUser.setName(username);
-                User user = restClient.post().uri("/users").body(newUser).retrieve().body(User.class);
-                AppDialogs createdNewUserDialog = new AppDialogs(this);
-                createdNewUserDialog.dialogMessage("New user created!", "Succesfully registered new user: " + user.getName());
+
+                Alert signUpAlert = new Alert(Alert.AlertType.CONFIRMATION);
+                signUpAlert.setTitle("Register as new user");
+                signUpAlert.setHeaderText("User doesn't exist");
+                signUpAlert.setContentText("Want to sign up as a new user?");
+
+                Optional<ButtonType> result = signUpAlert.showAndWait();
+
+                if(result.isPresent() && result.get() == ButtonType.OK){
+                    //Create user object
+                    User newUser = new User();
+                    newUser.setName(username);
+
+                    User user = restClient.post().uri("/users").body(newUser).retrieve().body(User.class);
+                    onlineState.setUser(user);
+
+                    Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                    successAlert.setTitle("New user created");
+                    successAlert.setHeaderText("New user succesfully created: " + user.getName());
+                    successAlert.show();
+
+                }
                 return;
             }
 
@@ -55,11 +74,16 @@ public class OnlineController {
 
             //Assign user & welcome user
             onlineState.setUser(user);
-            AppDialogs welcomeDialog = new AppDialogs(this);
-            welcomeDialog.dialogMessage("Signed in","Welcome " + user.getName());
+            Alert welcomeAlert = new Alert(Alert.AlertType.INFORMATION);
+            welcomeAlert.setTitle("Signed in");
+            welcomeAlert.setHeaderText("Welcome " + user.getName());
+            welcomeAlert.show();
+
         }catch(Exception err){
-            AppDialogs ExceptionDialog = new AppDialogs(this);
-            ExceptionDialog.dialogMessage("Unable to sign in", err.getMessage());
+            Alert unableToSignInAlert = new Alert(Alert.AlertType.INFORMATION);
+            unableToSignInAlert.setTitle("Unable to sign in");
+            unableToSignInAlert.setHeaderText(err.getMessage().toString());
+            unableToSignInAlert.show();
         }
     }
 
@@ -70,7 +94,10 @@ public class OnlineController {
 
         User user = onlineState.getUser();
         onlineState.removeCurrentUser();
-        AppDialogs signedOutDialog = new AppDialogs(this);
-        signedOutDialog.dialogMessage("Signed out", "Succesfully signed out as " + user.getName());
+
+        Alert signOutAlert = new Alert(Alert.AlertType.INFORMATION);
+        signOutAlert.setTitle("Signed out");
+        signOutAlert.setHeaderText(user.getName() + " succesfully signed out");
+        signOutAlert.show();
     }
 }

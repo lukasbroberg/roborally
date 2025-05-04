@@ -145,7 +145,7 @@ public class AppController implements Observer {
 
     public void selectGame() {
         if (gameController == null) {
-            roboRally.createGameSelectionView(this);
+            roboRally.createGameSelectionView(this,onlineController);
         }
 
     }
@@ -159,30 +159,34 @@ public class AppController implements Observer {
         try {
             onlineController.signOut();
         }catch(IllegalStateException err){
-            AppDialogs exceptionDialog = new AppDialogs(onlineController);
-            exceptionDialog.dialogMessage("Unable to sign out", err.getMessage());
+            Alert unableToSignOutAlert = new Alert(AlertType.INFORMATION);
+            unableToSignOutAlert.setTitle("Unable to login");
+            unableToSignOutAlert.setHeaderText(err.getMessage().toString());
+            unableToSignOutAlert.show();
         }
     }
-    public void createGame(String gameID,String gameName, int minPlayers, int maxPlayers ) throws URISyntaxException {
-//        System.out.println("Create game:"+gameName+"ID:"+gameID+",minPlayers:"+minPlayers+"maxPlayers:"+maxPlayers+")");
-        URI baseURI = new URI("http://localhost:8080/");
+    public void createGame(Game newGame) throws URISyntaxException {
 
-        ClientFactory factory = Configuration.builder()
-                .setBaseUri(baseURI)
-                .build()
-                .buildClientFactory();
 
-        Client<Game> clientGame = factory.create(Game.class);
-        Game game = new Game();
-        game.setMaxPlayers(maxPlayers);
-        game.setMinPlayers(minPlayers);
-        game.setName(gameName);
-        clientGame.post(game);
+        //System.out.println("Create game:"+gameName+"ID:"+gameID+",minPlayers:"+minPlayers+"maxPlayers:"+maxPlayers+")");
+//        URI baseURI = new URI("http://localhost:8080/");
+//
+//        ClientFactory factory = Configuration.builder()
+//                .setBaseUri(baseURI)
+//                .build()
+//                .buildClientFactory();
+//
+//        Client<Game> clientGame = factory.create(Game.class);
+//        Game game = new Game();
+//        game.setMaxPlayers(maxPlayers);
+//        game.setMinPlayers(minPlayers);
+//        game.setName(gameName);
+//        clientGame.post(game);
     }
 
     public void gameSelected(Game game) {
         if (gameController == null) {
-            roboRally.createGameSelectionView(null);
+            roboRally.createGameSelectionView(null, null);
             // TODO here we should actually start the game
         }
     }

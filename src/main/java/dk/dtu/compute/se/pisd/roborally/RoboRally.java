@@ -99,14 +99,15 @@ public class RoboRally extends Application {
         stage.sizeToScene();
     }
 
-    public void createGameSelectionView(AppController appController) {
+    public void createGameSelectionView(AppController appController, OnlineController onlineController) {
         // if present, remove old BoardView
         boardRoot.getChildren().clear();
 
 
         if (appController != null) {
             // create and add view for new board
-            GameSelection gameSelection = new GameSelection(appController);
+            GameSelection gameSelection = new GameSelection(appController, onlineController);
+            gameSelection.openGameSelectionView();
             boardRoot.setCenter(gameSelection);
             // width and height should be done in a nicer way
             // and probably with scrollbar in the respective pane (GamesView)
@@ -122,12 +123,6 @@ public class RoboRally extends Application {
         }
 
     }
-
-    /*public void createNewGame(AppController appController, Game game){
-            //Scene createNewGameScene = new Scene();
-            //stage.setScene(createNewGameScene);
-
-    }*/
 
     @Override
     public void stop() throws Exception {

@@ -1,16 +1,21 @@
 package dk.dtu.compute.se.pisd.roborally.gameselection.view;
 
+import dk.dtu.compute.se.pisd.roborally.controller.AppController;
 import dk.dtu.compute.se.pisd.roborally.gameselection.controller.OnlineController;
+import dk.dtu.compute.se.pisd.roborally.gameselection.model.Game;
+import dk.dtu.compute.se.pisd.roborally.gameselection.model.OnlineState;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import javax.swing.*;
+import java.net.URISyntaxException;
 
 public class AppDialogs {
     private OnlineController onlineController;
@@ -62,31 +67,43 @@ public class AppDialogs {
         window.show();
     }
 
-    public void registerNew(){
+    public void createNewGame(AppController appController){
+        TextField maxPlayersField = new TextField();
+        TextField minPlayersField = new TextField();
+        TextField nameField = new TextField();
+
+        Dialog<ButtonType> createNewGameDialog = new Dialog<>();
+        createNewGameDialog.setTitle("Create New Game");
+
+        //layout for form
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+
+        grid.add(new Label("Max players:"),0,0);
+        grid.add(maxPlayersField,1,0);
+        grid.add(new Label("Min players:"),0,1);
+        grid.add(minPlayersField,1,1);
+        grid.add(new Label("Game Name:"),0,3);
+        grid.add(nameField,1,3);
+
+        createNewGameDialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK,ButtonType.CANCEL);
+        createNewGameDialog.getDialogPane().setContent(grid);
+
+        createNewGameDialog.showAndWait().ifPresent(response ->{
+            if(response ==ButtonType.OK){
+                Game newGame = new Game();
+                    newGame.setMinPlayers(Integer.parseInt(minPlayersField.getText()));
+                    newGame.setMaxPlayers(Integer.parseInt(minPlayersField.getText()));
+                    newGame.setName(nameField.getText());
+                try{
+                    appController.createGame(newGame);
+                }catch (URISyntaxException err){
+                    System.out.println(err.getMessage());
+                }
+            }
+        });
 
 
-    }
-
-    public void dialogMessage(String windowTitle, String message){
-        Stage window = new Stage();
-        Text welcomeText = new Text(message);
-        Button okButton = new Button("ok");
-        okButton.setOnAction(e -> window.close());
-        VBox vbox = new VBox(welcomeText,okButton);
-        Scene scene = new Scene(vbox);
-        window.setTitle(windowTitle);
-        window.setScene(scene);
-        window.setMinHeight(100);
-        window.setMinWidth(200);
-        window.initModality(Modality.APPLICATION_MODAL);
-        window.show();
-
-
-
-
-    }
-
-    public void createNewGame(){
-        //Dialog for creating the new game..
     }
 }

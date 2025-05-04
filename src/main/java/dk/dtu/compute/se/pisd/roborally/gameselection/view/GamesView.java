@@ -7,6 +7,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.web.client.RestClient;
 import uk.co.blackpepper.bowman.Client;
 import uk.co.blackpepper.bowman.ClientFactory;
 import uk.co.blackpepper.bowman.Configuration;
@@ -25,6 +28,7 @@ public class GamesView extends GridPane {
 
     private AppController appController;
     private List<GameButtons> games;
+    private RestClient restClient = RestClient.builder().baseUrl("http://localhost:8080/roborally/").build();
 
 
     public GamesView(AppController appController, GameSelection gameSelection) {
@@ -34,63 +38,59 @@ public class GamesView extends GridPane {
         this.getColumnConstraints().add(new ColumnConstraints(200));
         this.getColumnConstraints().add(new ColumnConstraints(70));
         this.getColumnConstraints().add(new ColumnConstraints(70));
-        /*
-        this.prefWidth(width);
-        this.maxWidth(width);
-        this.minWidth(width);
-        this.prefHeight(height);
-        this.maxHeight(height);
-        this.minHeight(height); */
 
         update();
     }
 
     private void update() {
         try {
-            URI baseURI = new URI("http://localhost:8080/");
-
-            ClientFactory factory = Configuration.builder()
-                    .setBaseUri(baseURI)
-                    .build()
-                    .buildClientFactory();
-
-            Client<Game> clientGame = factory.create(Game.class);
+            List<Game> openGames = restClient.get().uri("games/openGames").retrieve().body(new ParameterizedTypeReference<List<Game>>() {
+            });
+            System.out.println(openGames);
+            // Client<Game> clientGame = factory.create(Game.class);
             // Client<Player> clientPlayer = factory.create(Player.class);
             // Client<User> clientUser = factory.create(User.class);
 
-            Iterable<Game> games = clientGame.getAll();
+            //Iterable<Game> games = clientGame.getAll();
 
-            int i = 0;
-            for (Game game: games ) {
 
-                Button nameButton = new Button(game.getName() +
-                        " (min: " + game.getMinPlayers() +
-                        ", max: " + game.getMaxPlayers() + ")" );
 
+            for(var i=0; i<openGames.size(); i++){
+                System.out.println(openGames.get(i).getName());
+                Game game = openGames.get(i);
+
+                Text gameName = new Text(game.getName());
+                Text minPlayers = new Text("Min: " + game.getMinPlayers());
+                Text maxPlayers = new Text("Max: " + game.getMinPlayers());
+
+                Button joinButton = new Button("Join");
+                joinButton.setOnAction(e ->{
+                    //Join game
+                });
+                Button leaveButton = new Button("Leave");
+                leaveButton.setOnAction(e -> {
+                    //Leave game
+                });
                 Button startButton = new Button("Start");
-                startButton.setOnAction((e) -> {
-                    //JoinGameView j = new JoinGameView(game);
-
-                    //this.stage.setScene()
+                startButton.setOnAction(e ->{
+                    //Start game
                 });
-
                 Button deleteButton = new Button("Delete");
-                deleteButton.setOnAction((e) -> {
-                    try {
-                        clientGame.delete(game.getId());
-                        appController.selectGame();
-                    } catch (Exception exception) {
-                        // Some info to the user, would be nice here
-                        // Anyway this "complex functionality" should be somewhere
-                        // in a controller
-                    }
+                deleteButton.setOnAction(e -> {
+                    //delete game
                 });
-                this.add(nameButton, 0, i);
-                this.add(startButton, 1, i);
-                this.add(deleteButton, 2, i);
-                i++;
+
+                this.add(gameName, 0, i);
+                this.add(minPlayers, 1, i);
+                this.add(maxPlayers, 2, i);
+                this.add(joinButton, 3, i);
+                this.add(leaveButton, 4, i);
+                this.add(startButton, 5, i);
+                this.add(deleteButton, 6, i);
+
             }
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             Label text = new Label("There was a problem with loading the games.");
             this.add(text, 0,0);
 

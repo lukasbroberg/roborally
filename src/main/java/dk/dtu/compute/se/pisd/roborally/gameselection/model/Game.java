@@ -12,19 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RemoteResource("/game")
-//@JsonIdentityInfo(
-//        scope=Game.class,
-//        generator = ObjectIdGenerators.PropertyGenerator.class,
-//        property = "uid"
-//)
 public class Game {
 
-//    @Id
-//    @Column(name = "game_id")
-//    @GeneratedValue(strategy =GenerationType.AUTO)
+    private long uid;
+
     private URI id;
 
-    private long uid;
 
     private String name;
 
@@ -68,7 +61,6 @@ public class Game {
     public URI getId() {
         return id;
     }
-
 
     public void setId(URI id) {
         this.id = id;
