@@ -7,6 +7,7 @@ public class OnlineState {
     private User user;
 
     private List<Game> openGames;
+
     private Game signedUpGame;
 
     public void setUser(User user){

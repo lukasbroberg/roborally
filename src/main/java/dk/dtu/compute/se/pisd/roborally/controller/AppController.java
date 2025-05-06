@@ -144,20 +144,32 @@ public class AppController implements Observer {
     }
 
     public void selectGame() {
+        if(onlineController.onlineState.getUser()==null){
+            Alert needToSignIn = new Alert(AlertType.INFORMATION);
+            needToSignIn.setTitle("Unable to view games");
+            needToSignIn.setHeaderText("You must be signed in to view game selection.");
+            needToSignIn.show();
+            return;
+        }
         if (gameController == null) {
             roboRally.createGameSelectionView(this,onlineController);
         }
-
     }
 
-    public void signInGame(){
+    public void refreshGameSelection(){
+        this.gameSelected(null);
+        //this.selectGame();
+    }
+
+    public void signIn(){
         AppDialogs signInDialog = new AppDialogs(onlineController);
         signInDialog.signIn();
     }
 
-    public void signOutGame(){
+    public void signOut(){
         try {
             onlineController.signOut();
+            this.refreshGameSelection();
         }catch(IllegalStateException err){
             Alert unableToSignOutAlert = new Alert(AlertType.INFORMATION);
             unableToSignOutAlert.setTitle("Unable to login");
@@ -168,24 +180,10 @@ public class AppController implements Observer {
     public void createGame(Game newGame) {
         try{
             onlineController.createNewGame(newGame);
+            this.refreshGameSelection();
         }catch (IllegalStateException e){
             System.out.println(e.getMessage());
         }
-
-        //System.out.println("Create game:"+gameName+"ID:"+gameID+",minPlayers:"+minPlayers+"maxPlayers:"+maxPlayers+")");
-//        URI baseURI = new URI("http://localhost:8080/");
-//
-//        ClientFactory factory = Configuration.builder()
-//                .setBaseUri(baseURI)
-//                .build()
-//                .buildClientFactory();
-//
-//        Client<Game> clientGame = factory.create(Game.class);
-//        Game game = new Game();
-//        game.setMaxPlayers(maxPlayers);
-//        game.setMinPlayers(minPlayers);
-//        game.setName(gameName);
-//        clientGame.post(game);
     }
 
     public void gameSelected(Game game) {

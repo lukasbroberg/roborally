@@ -1,10 +1,7 @@
 package dk.dtu.compute.se.pisd.roborally.gameselection.controller;
 
 import dk.dtu.compute.se.pisd.roborally.controller.AppController;
-import dk.dtu.compute.se.pisd.roborally.gameselection.model.Game;
-import dk.dtu.compute.se.pisd.roborally.gameselection.model.GameState;
-import dk.dtu.compute.se.pisd.roborally.gameselection.model.OnlineState;
-import dk.dtu.compute.se.pisd.roborally.gameselection.model.User;
+import dk.dtu.compute.se.pisd.roborally.gameselection.model.*;
 import dk.dtu.compute.se.pisd.roborally.gameselection.view.AppDialogs;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -108,13 +105,7 @@ public class OnlineController {
         try{
             List<Game> games = restClient.get().uri("/games/openGames").retrieve().body(new ParameterizedTypeReference<>() {});
             onlineState.setOpenGames(games);
-
-            for(Game game : games){
-                System.out.println(game.getOwner().getUid());
-                System.out.println(game.getOwner().getName());
-            }
         }catch(Exception err){
-            System.out.println("Error in onlinecontroller");
             System.out.println(err.getMessage());
         }
     }
@@ -136,8 +127,90 @@ public class OnlineController {
             Game game = restClient.post().uri("games/createNewGame").body(newGame).retrieve().body(Game.class);
 
         } catch (Exception e) {
-            System.out.println("Error in creating new game: ");
-            System.out.println(e.getMessage());
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Unable to create game");
+            alert.setHeaderText("Unable to create game: " + e.getMessage());
+            alert.show();
+        }
+    }
+
+    public void deleteGame(Game game){
+        User owner = game.getOwner();
+        User user = onlineState.getUser();
+
+        //Make sure its the owner, trying to delete the game
+        if(owner.getUid()!=user.getUid()){
+            return;
+        }
+
+        try{
+            ResponseEntity<Void> result = restClient.delete().uri("/games/{id}", game.getUid()).retrieve().toBodilessEntity();
+        }catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Unable to delete game");
+            alert.setHeaderText("Unable to delete game: " + e.getMessage());
+            alert.show();
+        }finally {
+            appController.refreshGameSelection();
+        }
+    }
+
+    public void startGame(Game game){
+        User user = onlineState.getUser();
+        User owner = game.getOwner();
+
+        if(user.getUid()!=owner.getUid()){
+            return;
+        }
+
+        try{
+            ResponseEntity<Void> result = restClient.patch().uri("/games/start/{id}",game.getUid()).retrieve().toBodilessEntity();
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Unable to start game");
+            alert.setHeaderText("Unable to start the game: " + e.getMessage());
+            alert.show();
+        }finally {
+            appController.refreshGameSelection();
+        }
+    }
+
+    public void joinGame(Game game){
+        try{
+            if(game.getPlayers().size()<game.getMaxPlayers()){
+                Game joinGame = new Game();
+                joinGame.setUid(game.getUid());
+
+                User user = new User();
+                user.setUid(onlineState.getUser().getUid());
+
+                Player player = new Player();
+                player.setUser(user);
+                player.setName(user.getName());
+                player.setGame(joinGame);
+
+                Player newPlayer = restClient.post().uri("/players/createNew").body(player).retrieve().body(Player.class);
+            }
+        }catch(Exception e){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Unable to join game");
+            alert.setHeaderText("Unable to join new game: " + e.getMessage());
+            alert.show();
+        }finally {
+            appController.refreshGameSelection();
+        }
+    }
+
+    public void leaveGame(Player player){
+        try{
+            ResponseEntity<Void> result = restClient.delete().uri("/players/delete/{id}",player.getUid()).retrieve().toBodilessEntity();
+        }catch(Exception e){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Unable to leave game");
+            alert.setHeaderText("Unable to leave game: " + e.getMessage());
+            alert.show();
+        }finally {
+            appController.refreshGameSelection();
         }
     }
 }

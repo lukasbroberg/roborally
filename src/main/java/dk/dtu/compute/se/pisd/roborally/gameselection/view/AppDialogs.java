@@ -94,7 +94,7 @@ public class AppDialogs {
             if(response ==ButtonType.OK){
                 Game newGame = new Game();
                     newGame.setMinPlayers(Integer.parseInt(minPlayersField.getText()));
-                    newGame.setMaxPlayers(Integer.parseInt(minPlayersField.getText()));
+                    newGame.setMaxPlayers(Integer.parseInt(maxPlayersField.getText()));
                     newGame.setName(nameField.getText());
                 try{
                     appController.createGame(newGame);
