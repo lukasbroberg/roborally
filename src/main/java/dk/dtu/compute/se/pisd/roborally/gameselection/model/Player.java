@@ -1,5 +1,8 @@
 package dk.dtu.compute.se.pisd.roborally.gameselection.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import uk.co.blackpepper.bowman.annotation.LinkedResource;
 import uk.co.blackpepper.bowman.annotation.RemoteResource;
 import uk.co.blackpepper.bowman.annotation.ResourceId;
@@ -7,9 +10,13 @@ import uk.co.blackpepper.bowman.annotation.ResourceId;
 import java.net.URI;
 
 @RemoteResource("/player")
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonIdentityInfo(
+        scope = Player.class,
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "uid"
+)
 public class Player {
-
-    private URI id;
 
     private long uid;
 
@@ -25,14 +32,9 @@ public class Player {
      */
     public Player() {};
 
-    public Player(String name) {
-        this.name = name;
-    }
-
-    @ResourceId
-    public URI getId() {
-        return id;
-    }
+//    public Player(String name) {
+//        this.name = name;
+//    }
 
     public long getUid() {
         return uid;
@@ -50,7 +52,6 @@ public class Player {
         this.name = name;
     }
 
-    @LinkedResource
     public Game getGame() {
         return game;
     }
@@ -59,7 +60,6 @@ public class Player {
         this.game = game;
     }
 
-    @LinkedResource
     public User getUser() {
         return user;
     }
@@ -72,7 +72,7 @@ public class Player {
     public String toString() {
         // IMPORTANT: Don't try to add more information here,
         //            since this will invoke a REST request!
-        return "Player{ id = " + getId() + " }";
+        return "Player{ id = " + getUid() + " }";
     }
 
 }

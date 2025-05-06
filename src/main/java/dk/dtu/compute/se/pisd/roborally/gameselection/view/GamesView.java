@@ -1,8 +1,10 @@
 package dk.dtu.compute.se.pisd.roborally.gameselection.view;
 
 import dk.dtu.compute.se.pisd.roborally.controller.AppController;
+import dk.dtu.compute.se.pisd.roborally.gameselection.controller.OnlineController;
 import dk.dtu.compute.se.pisd.roborally.gameselection.model.Game;
 
+import dk.dtu.compute.se.pisd.roborally.gameselection.model.OnlineState;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
@@ -22,20 +24,23 @@ import java.util.List;
 
 public class GamesView extends GridPane {
 
-
     public static final int width = 640;
     public static final int height = 400;
 
-    private AppController appController;
     private List<GameButtons> games;
     private RestClient restClient = RestClient.builder().baseUrl("http://localhost:8080/roborally/").build();
 
+    private OnlineController onlineController;
 
-    public GamesView(AppController appController, GameSelection gameSelection) {
-        this.appController = appController;
+    public GamesView(OnlineController onlineController, GameSelection gameSelection) {
+        this.onlineController = onlineController;
         games = new ArrayList<>();
 
         this.getColumnConstraints().add(new ColumnConstraints(200));
+        this.getColumnConstraints().add(new ColumnConstraints(70));
+        this.getColumnConstraints().add(new ColumnConstraints(70));
+        this.getColumnConstraints().add(new ColumnConstraints(70));
+        this.getColumnConstraints().add(new ColumnConstraints(70));
         this.getColumnConstraints().add(new ColumnConstraints(70));
         this.getColumnConstraints().add(new ColumnConstraints(70));
 
@@ -44,16 +49,18 @@ public class GamesView extends GridPane {
 
     private void update() {
         try {
-            List<Game> openGames = restClient.get().uri("games/openGames").retrieve().body(new ParameterizedTypeReference<List<Game>>() {
-            });
-            System.out.println(openGames);
             // Client<Game> clientGame = factory.create(Game.class);
             // Client<Player> clientPlayer = factory.create(Player.class);
             // Client<User> clientUser = factory.create(User.class);
 
             //Iterable<Game> games = clientGame.getAll();
 
+            onlineController.getOpenGames();
 
+            List<Game> openGames = onlineController.onlineState.getOpenGames();
+            if(openGames.size()<=0){
+                return;
+            }
 
             for(var i=0; i<openGames.size(); i++){
                 System.out.println(openGames.get(i).getName());
@@ -61,7 +68,7 @@ public class GamesView extends GridPane {
 
                 Text gameName = new Text(game.getName());
                 Text minPlayers = new Text("Min: " + game.getMinPlayers());
-                Text maxPlayers = new Text("Max: " + game.getMinPlayers());
+                Text maxPlayers = new Text("Max: " + game.getMaxPlayers());
 
                 Button joinButton = new Button("Join");
                 joinButton.setOnAction(e ->{
@@ -90,6 +97,7 @@ public class GamesView extends GridPane {
 
             }
         } catch (Exception e) {
+            System.out.println("Error in gamesview");
             System.out.println(e.getMessage());
             Label text = new Label("There was a problem with loading the games.");
             this.add(text, 0,0);
@@ -115,11 +123,5 @@ public class GamesView extends GridPane {
             this.deleteButton = deleteButton;
         }
     }
-    /*
-
-    private class SignupView(AppController appcontroller, GameSelection gameSelection){
-       // public final Game game;
-
-    }*/
 
 }

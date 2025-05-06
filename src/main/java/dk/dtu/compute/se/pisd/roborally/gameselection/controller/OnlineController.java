@@ -1,6 +1,8 @@
 package dk.dtu.compute.se.pisd.roborally.gameselection.controller;
 
 import dk.dtu.compute.se.pisd.roborally.controller.AppController;
+import dk.dtu.compute.se.pisd.roborally.gameselection.model.Game;
+import dk.dtu.compute.se.pisd.roborally.gameselection.model.GameState;
 import dk.dtu.compute.se.pisd.roborally.gameselection.model.OnlineState;
 import dk.dtu.compute.se.pisd.roborally.gameselection.model.User;
 import dk.dtu.compute.se.pisd.roborally.gameselection.view.AppDialogs;
@@ -13,6 +15,7 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriBuilder;
 
 import javax.swing.*;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +23,7 @@ public class OnlineController {
 
     private RestClient restClient = RestClient.builder().baseUrl("http://localhost:8080/roborally/").build();
     private AppController appController;
-    private OnlineState onlineState;
+    public OnlineState onlineState;
 
     public OnlineController(AppController appController) {
         this.appController = appController;
@@ -99,5 +102,42 @@ public class OnlineController {
         signOutAlert.setTitle("Signed out");
         signOutAlert.setHeaderText(user.getName() + " succesfully signed out");
         signOutAlert.show();
+    }
+
+    public void getOpenGames(){
+        try{
+            List<Game> games = restClient.get().uri("/games/openGames").retrieve().body(new ParameterizedTypeReference<>() {});
+            onlineState.setOpenGames(games);
+
+            for(Game game : games){
+                System.out.println(game.getOwner().getUid());
+                System.out.println(game.getOwner().getName());
+            }
+        }catch(Exception err){
+            System.out.println("Error in onlinecontroller");
+            System.out.println(err.getMessage());
+        }
+    }
+
+    public void createNewGame(Game newGame) throws IllegalStateException{
+        if(onlineState.getUser()==null){
+            throw new IllegalStateException("User is not signed in. Sign in to create a new game.");
+        }
+
+        newGame.setState(GameState.SIGNUP);
+
+        try{
+            User owner = new User();
+            owner.setUid(onlineState.getUser().getUid());
+            owner.setName(onlineState.getUser().getName());
+
+            newGame.setOwner(owner);
+
+            Game game = restClient.post().uri("games/createNewGame").body(newGame).retrieve().body(Game.class);
+
+        } catch (Exception e) {
+            System.out.println("Error in creating new game: ");
+            System.out.println(e.getMessage());
+        }
     }
 }

@@ -30,8 +30,9 @@ public class GameSelection extends BorderPane {
         Button createNewGame = new Button("New game");
         createNewGame.setMinWidth(80);
         createNewGame.setOnAction(e -> {
-                appDialogs.createNewGame(appController);
+            appDialogs.createNewGame(appController);
         });
+
         Button close = new Button("Close");
         close.setOnAction((e) -> {
             appController.gameSelected(null);
@@ -48,7 +49,7 @@ public class GameSelection extends BorderPane {
         // we should also have a textfield for the selected user
         // who will own the created game
 
-        Pane bottom  = new GamesView(appController, this);
+        Pane bottom  = new GamesView(onlineController, this);
         VBox vbox =  new VBox(top, bottom);
 
         this.getChildren().add(vbox);

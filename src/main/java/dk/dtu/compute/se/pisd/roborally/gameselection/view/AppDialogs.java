@@ -98,7 +98,7 @@ public class AppDialogs {
                     newGame.setName(nameField.getText());
                 try{
                     appController.createGame(newGame);
-                }catch (URISyntaxException err){
+                }catch (Exception err){
                     System.out.println(err.getMessage());
                 }
             }

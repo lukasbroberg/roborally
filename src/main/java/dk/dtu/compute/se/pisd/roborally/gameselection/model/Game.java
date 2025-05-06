@@ -1,6 +1,7 @@
 package dk.dtu.compute.se.pisd.roborally.gameselection.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.intellij.lang.annotations.Identifier;
 import uk.co.blackpepper.bowman.annotation.LinkedResource;
@@ -12,12 +13,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RemoteResource("/game")
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonIdentityInfo(
+        scope = Game.class,
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "uid"
+)
 public class Game {
 
     private long uid;
-
-    private URI id;
-
 
     private String name;
 
@@ -30,7 +34,6 @@ public class Game {
     private List<Player> players = new ArrayList<>();
 
     private User owner;
-
 
     public Game() {};
 
@@ -48,22 +51,6 @@ public class Game {
 
     public void setOwner(User owner){
         this.owner = owner;
-    }
-
-
-    public Game(String name, int minPlayers, int maxPlayers) {
-        this.name = name;
-        this.minPlayers = minPlayers;
-        this.maxPlayers = maxPlayers;
-    }
-
-    @ResourceId
-    public URI getId() {
-        return id;
-    }
-
-    public void setId(URI id) {
-        this.id = id;
     }
 
     public long getUid() {
@@ -111,7 +98,7 @@ public class Game {
     public String toString() {
         // IMPORTANT: Don't try to add more information here,
         //            since this will invoke a REST request!
-        return "Game{ id=" + getId() + " }";
+        return "Game{ id=" + getUid() + " }";
     }
 
 }

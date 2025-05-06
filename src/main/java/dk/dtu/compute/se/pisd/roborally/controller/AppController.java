@@ -165,8 +165,12 @@ public class AppController implements Observer {
             unableToSignOutAlert.show();
         }
     }
-    public void createGame(Game newGame) throws URISyntaxException {
-
+    public void createGame(Game newGame) {
+        try{
+            onlineController.createNewGame(newGame);
+        }catch (IllegalStateException e){
+            System.out.println(e.getMessage());
+        }
 
         //System.out.println("Create game:"+gameName+"ID:"+gameID+",minPlayers:"+minPlayers+"maxPlayers:"+maxPlayers+")");
 //        URI baseURI = new URI("http://localhost:8080/");
