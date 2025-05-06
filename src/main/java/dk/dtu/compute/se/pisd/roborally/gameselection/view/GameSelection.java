@@ -9,6 +9,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 import java.net.URISyntaxException;
 
@@ -27,6 +28,8 @@ public class GameSelection extends BorderPane {
     public void openGameSelectionView(){
         this.setPrefSize(GamesView.width,GamesView.height);
 
+        Text signedInUser = new Text("Signed in as: " + onlineController.onlineState.getUser().getName());
+
         Button createNewGame = new Button("New game");
         createNewGame.setMinWidth(80);
         createNewGame.setOnAction(e -> {
@@ -38,11 +41,17 @@ public class GameSelection extends BorderPane {
             appController.gameSelected(null);
         });
 
+        Button refresh = new Button("Refresh");
+        refresh.setOnAction(e -> {
+            //Refresh games list here
+        });
+
         // also here, this is a quick hack
         close.setMinWidth(50);
         close.setMinHeight(30);
 
         GridPane top = new GridPane();
+        top.add(signedInUser,0, 0);
         top.add(close,2, 0);
         top.add(createNewGame,3, 0);
 

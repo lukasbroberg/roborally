@@ -5,10 +5,13 @@ import dk.dtu.compute.se.pisd.roborally.gameselection.controller.OnlineControlle
 import dk.dtu.compute.se.pisd.roborally.gameselection.model.Game;
 
 import dk.dtu.compute.se.pisd.roborally.gameselection.model.OnlineState;
+import dk.dtu.compute.se.pisd.roborally.gameselection.model.Player;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.client.RestClient;
@@ -87,13 +90,24 @@ public class GamesView extends GridPane {
                     //delete game
                 });
 
-                this.add(gameName, 0, i);
+                VBox playersJoined = new VBox();
+                List<Player> JoinedPlayers = openGames.get(i).getPlayers();
+                for(Player JoinedPlayer : JoinedPlayers){
+                    Text JoinedPlayerText = new Text(JoinedPlayer.getName());
+                    playersJoined.getChildren().add(JoinedPlayerText);
+                    playersJoined.setSpacing(10);
+                }
+
+
+
+                /*this.add(gameName, 0, i);
                 this.add(minPlayers, 1, i);
                 this.add(maxPlayers, 2, i);
                 this.add(joinButton, 3, i);
                 this.add(leaveButton, 4, i);
                 this.add(startButton, 5, i);
                 this.add(deleteButton, 6, i);
+                this.add(playersJoined,0,1);*/
 
             }
         } catch (Exception e) {
