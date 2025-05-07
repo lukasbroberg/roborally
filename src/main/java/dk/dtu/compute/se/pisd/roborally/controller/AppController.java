@@ -158,7 +158,7 @@ public class AppController implements Observer {
 
     public void refreshGameSelection(){
         this.gameSelected(null);
-        //this.selectGame();
+        this.selectGame();
     }
 
     public void signIn(){

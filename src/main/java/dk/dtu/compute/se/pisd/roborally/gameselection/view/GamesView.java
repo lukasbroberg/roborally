@@ -31,7 +31,6 @@ public class GamesView extends GridPane {
     public static final int height = 400;
 
     private List<GameButtons> games;
-    private RestClient restClient = RestClient.builder().baseUrl("http://localhost:8080/roborally/").build();
 
     private OnlineController onlineController;
 

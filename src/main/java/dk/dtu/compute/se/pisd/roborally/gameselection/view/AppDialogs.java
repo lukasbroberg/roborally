@@ -92,15 +92,18 @@ public class AppDialogs {
 
         createNewGameDialog.showAndWait().ifPresent(response ->{
             if(response ==ButtonType.OK){
-                Game newGame = new Game();
-                    newGame.setMinPlayers(Integer.parseInt(minPlayersField.getText()));
-                    newGame.setMaxPlayers(Integer.parseInt(maxPlayersField.getText()));
-                    newGame.setName(nameField.getText());
-                try{
-                    appController.createGame(newGame);
-                }catch (Exception err){
-                    System.out.println(err.getMessage());
+                if(!minPlayersField.getText().isEmpty() && !maxPlayersField.getText().isEmpty() && !nameField.getText().isEmpty()){
+                    Game newGame = new Game();
+                        newGame.setMinPlayers(Integer.parseInt(minPlayersField.getText()));
+                        newGame.setMaxPlayers(Integer.parseInt(maxPlayersField.getText()));
+                        newGame.setName(nameField.getText());
+                    try{
+                        appController.createGame(newGame);
+                    }catch (Exception err){
+                        System.out.println(err.getMessage());
+                    }
                 }
+
             }
         });
 
